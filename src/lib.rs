@@ -59,6 +59,7 @@ unsafe extern "C" fn create(
     }
 
     let widget = WidgetDataV1 {
+        key: str_to_fixed("status"),
         span_cols: 2,
         span_rows: 1,
         title: str_to_fixed("Plugin loaded"),
