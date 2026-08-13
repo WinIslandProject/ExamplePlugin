@@ -1,0 +1,23 @@
+[package]
+name = "winisland-example-plugin"
+version = "0.1.0"
+edition = "2024"
+authors = ["WinIslandProject"]
+description = "Reference widget plugin for WinIsland"
+repository = "https://github.com/WinIslandProject/ExamplePlugin"
+license = "MIT"
+publish = false
+
+[lib]
+name = "winisland_example_plugin"
+crate-type = ["cdylib"]
+
+[dependencies]
+winisland-plugin-api = "0.4.0"
+
+[dev-dependencies]
+winisland-plugin-api = { version = "0.4.0", features = ["packager"] }
+
+[[example]]
+name = "pack"
+path = "package.rs"
