@@ -1,9 +1,9 @@
 [package]
 name = "winisland-example-plugin"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 authors = ["WinIslandProject"]
-description = "Reference widget plugin for WinIsland"
+description = "Minimal WinIsland widget showing plugin load status"
 repository = "https://github.com/WinIslandProject/ExamplePlugin"
 license = "MIT"
 publish = false
@@ -13,10 +13,10 @@ name = "winisland_example_plugin"
 crate-type = ["cdylib"]
 
 [dependencies]
-winisland-plugin-api = "0.4.0"
+winisland-plugin-api = "0.4.1"
 
 [dev-dependencies]
-winisland-plugin-api = { version = "0.4.0", features = ["packager"] }
+winisland-plugin-api = { version = "0.4.1", features = ["packager"] }
 
 [[example]]
 name = "pack"

@@ -5,7 +5,7 @@ use winisland_plugin_api::*;
 const PLUGIN_ID: &str = "winisland-example-plugin";
 const PLUGIN_NAME: &str = "WinIsland Example";
 const PLUGIN_AUTHOR: &str = "WinIslandProject";
-const PLUGIN_DESCRIPTION: &str = "Reference widget plugin rendered through the native Draw API";
+const PLUGIN_DESCRIPTION: &str = "Minimal WinIsland widget showing plugin load status";
 
 struct Instance {
     token: PluginToken,
@@ -60,9 +60,8 @@ unsafe extern "C" fn create(
 
     let widget = WidgetDataV1 {
         span_cols: 2,
-        span_rows: 2,
-        title: str_to_fixed("WinIsland Example"),
-        body: str_to_fixed("Native Draw API"),
+        span_rows: 1,
+        title: str_to_fixed("Plugin loaded"),
         on_draw: Some(draw_widget),
         ..Default::default()
     };
@@ -92,67 +91,31 @@ unsafe extern "C" fn draw_widget(_callback_data: *mut c_void, context: *const Wi
     let Some(draw) = (unsafe { context_ref.draw_api() }) else {
         return;
     };
-    let (Some(round_rect), Some(circle), Some(arc), Some(text)) = (
-        draw.draw_round_rect,
-        draw.draw_circle,
-        draw.draw_arc,
-        draw.draw_text,
-    ) else {
+    let (Some(text), Some(measure_text), Some(line)) =
+        (draw.draw_text, draw.measure_text, draw.draw_line)
+    else {
         return;
     };
     let width = context_ref.width.max(1.0);
     let height = context_ref.height.max(1.0);
-    let inset = (width.min(height) * 0.09).clamp(10.0, 18.0);
-    let ring = (width.min(height) * 0.42).clamp(48.0, 82.0);
-    let ring_x = width - inset - ring;
-    let ring_y = (height - ring) * 0.5;
+    let label = Utf8SliceV1::borrowed("Plugin loaded");
+    let font_size = 16.0;
+    // SAFETY: Measurement is synchronous and uses the current valid context.
+    let text_width = unsafe { measure_text(context, label, font_size, 1) };
+    let text_x = ((width - text_width) * 0.5).max(0.0);
+    let text_y = ((height - font_size) * 0.5 - 5.0).max(0.0);
+    let line_y = (text_y + font_size + 7.0).min(height - 1.0);
     // SAFETY: All draw calls are synchronous and use the current valid context.
     unsafe {
-        round_rect(context, 0.0, 0.0, width, height, 18.0, 0xFF18191E);
-        text(
+        text(context, text_x, text_y, label, font_size, 1, 0xFFF5F5F7);
+        line(
             context,
-            inset,
-            inset,
-            Utf8SliceV1::borrowed("WinIsland"),
-            17.0,
-            1,
-            0xFFF8F8FA,
-        );
-        text(
-            context,
-            inset,
-            inset + 25.0,
-            Utf8SliceV1::borrowed("Plugin ready"),
-            11.0,
-            0,
-            0xFF9A9CA7,
-        );
-        circle(
-            context,
-            ring_x + ring * 0.5,
-            ring_y + ring * 0.5,
-            ring * 0.5,
-            0xFF292A32,
-        );
-        arc(
-            context,
-            ring_x + 5.0,
-            ring_y + 5.0,
-            ring - 10.0,
-            ring - 10.0,
-            -90.0,
-            280.0,
-            5.0,
-            0xFF58D7E8,
-        );
-        text(
-            context,
-            ring_x + ring * 0.33,
-            ring_y + ring * 0.35,
-            Utf8SliceV1::borrowed("OK"),
-            14.0,
-            1,
-            0xFFF8F8FA,
+            text_x,
+            line_y,
+            text_x + text_width,
+            line_y,
+            1.5,
+            0x99F5F5F7,
         );
     }
 }

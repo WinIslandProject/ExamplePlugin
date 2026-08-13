@@ -973,16 +973,16 @@ dependencies = [
 
 [[package]]
 name = "winisland-example-plugin"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "winisland-plugin-api",
 ]
 
 [[package]]
 name = "winisland-plugin-api"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4244861eecaea092f83113ea8e1a44378551c00e18be7a375f8327df93ad6336"
+checksum = "33ebb4306ed07dc9c75b77936b8e968bd47b12abd5b16ee502f37b5ac6eab702"
 dependencies = [
  "ed25519-dalek",
  "hex",
